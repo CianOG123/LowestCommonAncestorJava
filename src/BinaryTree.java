@@ -7,14 +7,14 @@ public class BinaryTree
     private List<Integer> path1 = new ArrayList<>();
     private List<Integer> path2 = new ArrayList<>();
  
-    int findLCA(int n1, int n2) {
+    public int findLCA(int n1, int n2) {
         path1.clear();
         path2.clear();
         return findLCAInternal(root, n1, n2);
     }
     
     private int findLCAInternal(Node root, int n1, int n2) {
-        if (!findPath(root, n1, path1) || !findPath(root, n2, path2))
+        if (findPath(root, n1, path1) == false || findPath(root, n2, path2) == false)
             return -1;
         int i = 0;
         while(i < path1.size() && i < path2.size()) {

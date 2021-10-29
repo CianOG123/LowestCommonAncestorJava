@@ -4,6 +4,7 @@ class Node {
  
     Node(int value) {
         data = value;
-        left = right = null;
+        left = null;
+        right = null;
     }
 }
