@@ -3,7 +3,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class BinaryTreeTest {
+class DirectedAcyclicGraphTest {
+	
+	@Test
+	void testfindLCAInDAG() {
+		//assertEquals("Should return x", x, graph.findLCA(y, z));
+		//assertEquals("Should return x", x, graph.findLCA(y, z));
+		//assertEquals("Should return x", x, graph.findLCA(y, z));
+	}
+	
+	// Rewrite to work for directed graph ------------------------------------------------
 	
 	@Test
 	public void testConstructor() {
@@ -76,4 +85,99 @@ class BinaryTreeTest {
 		assertEquals("Should be -1 as it is the same node",-1 ,tree.findLCA(8, 8));
 		assertEquals("Should be -2 if neither node exists",-1,tree.findLCA(40, 20));
 	}
+	
+	// -----------------------------------------------------------------------------------
+
+	@Test
+	void testCycleCyclicGraph() {
+		/*
+		 * Graph:
+		 * 
+		 * 0 -> 2 -> 3 -> 4
+		 * v   ^          |
+ 	 	 *    /           |
+		 * 1   <-----------
+		 */
+		Graph graph = new Graph();
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(3, 4);
+		graph.addEdge(4, 1);
+		assertEquals("Will return true as graph has a cycle", true, graph.hasCycle());
+	}
+	
+	@Test
+	void testCycleTreeGraph() {
+		/*
+		 * Graph:
+		 *        -> 2 -> 0
+		 *       /
+		 *   -> 4
+		 *  /    \-> 1
+		 * 5
+		 *  \-> 3
+		 * 
+		 */
+		Graph graph = new Graph();
+		graph.addEdge(5, 4);
+		graph.addEdge(5, 3);
+		graph.addEdge(4, 2);
+		graph.addEdge(4, 1);
+		graph.addEdge(2, 0);
+		assertEquals("Will return false as graph has no cycles", false, graph.hasCycle());
+		
+	}
+	
+	@Test
+	void testCycleDirectedAcyclicGraph() {
+		/*
+		 * Graph:
+		 * 
+		 * 0 -> 2 -> 3 -> 4
+		 * v   ^
+ 	 	 *    /
+		 * 1          5
+		 */
+		Graph graph = new Graph();
+		graph.addEdge(0,  1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(3, 4);
+		assertEquals("Will return false as graph has no cycles", false, graph.hasCycle());
+	}
+	
+	@Test
+	void testCreateGraph() {
+		/*
+		 * Graph:
+		 * 
+		 * 0 -> 2 -> 3 -> 4
+		 * v   ^
+ 	 	 *    /
+		 * 1          5
+		 */
+		Graph graph = new Graph();
+		graph.addEdge(0,  1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 2);
+		graph.addEdge(2, 3);
+		graph.addEdge(3, 4);
+		graph.addNode(5);
+		assertEquals("Amount of nodes should be 6", 6, graph.getNodeAmount());
+		assertEquals("Amount of edges should be 5", 5, graph.getEdgeAmount());
+		
+		DirectedNode node;
+		node = graph.getNode(0);
+		assertEquals("Amount of out nodes should be 2", 2, node.getOutNodeAmount());
+		
+		node = graph.getNode(5);
+		assertEquals("Amount of out nodes should be 0", 0, node.getOutNodeAmount());
+		
+		node = graph.getNode(3);
+		assertEquals("Amount of out nodes should be 1", 1, node.getOutNodeAmount());
+	}
+
 }
