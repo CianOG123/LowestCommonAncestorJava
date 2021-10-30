@@ -1,5 +1,4 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,86 +6,143 @@ class DirectedAcyclicGraphTest {
 	
 	@Test
 	void testfindLCAInDAG() {
-		//assertEquals("Should return x", x, graph.findLCA(y, z));
-		//assertEquals("Should return x", x, graph.findLCA(y, z));
-		//assertEquals("Should return x", x, graph.findLCA(y, z));
+		/*
+		 * Graph:
+		 *        -> 4 -> 5
+		 *       /
+		 *   -> 1
+		 *  /    \-> 3
+		 * 0
+		 *  \-> 2
+		 * 
+		 */
+		DAG graph = new DAG();
+		graph.addEdge(0, 1);
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(1, 4);
+		graph.addEdge(4, 5);
+		assertEquals("Should return 1", "1", getString(graph.findLCA(5, 3)));
 	}
-	
-	// Rewrite to work for directed graph ------------------------------------------------
 	
 	@Test
 	public void testConstructor() {
-		Node root = new Node(0);
-		assertEquals("Value is 0",0 ,root.data);
-		assertEquals("Left node is null",null ,root.left);
-		assertEquals("Right node is null",null ,root.right);
+		DirectedNode node1 = new DirectedNode(1);
+		DirectedNode node2 = new DirectedNode(2);
+		DirectedNode node3 = new DirectedNode(3);
+		assertEquals("Value is 1",1 ,node1.data);
+		assertEquals("Should be 0",0 ,node1.getOutNodeAmount());
+		assertEquals("Should be false",false ,node1.edgeExistsTo(node2));
+		node1.addEdgeTo(node3);
+		assertEquals("Should be true",true ,node1.edgeExistsTo(node3));
+		assertEquals("Should be 1",1 ,node1.getOutNodeAmount());
 	}
 
 	@Test
 	void testBinaryTree() {
-		BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.root.left.left = new Node(4);
-        tree.root.left.right = new Node(5);
-        tree.root.right.left = new Node(6);
-        tree.root.right.right = new Node(7);
+		/*
+		 * Graph:
+		 *        -> 4
+		 *       /
+		 *   -> 1
+		 *  /    \-> 3
+		 * 0
+		 *  \    /-> 5
+		 *   -> 2
+		 *       \-> 6
+		 */
+		DAG tree = new DAG();
+		tree.addEdge(0, 1);
+		tree.addEdge(0, 2);
+		tree.addEdge(1, 3);
+		tree.addEdge(1, 4);
+		tree.addEdge(2, 5);
+		tree.addEdge(2, 6);
         
-        assertEquals(tree.findLCA(4,5), 2, "LCA 4,5 ");
-        assertEquals(tree.findLCA(4,6), 1, "LCA 4,6 ");
-        assertEquals(tree.findLCA(3,4), 1, "LCA 3,4 ");
-        assertEquals(tree.findLCA(2,4), 2, "LCA 2,4 ");
+        assertEquals("LCA 4,5 ", "0", getString(tree.findLCA(4, 5)));
+        assertEquals("LCA 4,3 ", "1", getString(tree.findLCA(4, 3)));
+        assertEquals("LCA 3,4 ", "1", getString(tree.findLCA(3, 4)));
+        assertEquals("LCA 1,4 ", "1", getString(tree.findLCA(1, 4)));
 	}
 	
 	@Test
 	public void testDuplicateNode() {
-		BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.root.left.left = new Node(4);
-        tree.root.left.right = new Node(5);
-        tree.root.right.left = new Node(6);
-        tree.root.right.right = new Node(7);
+		/*
+		 * Graph:
+		 *        -> 4
+		 *       /
+		 *   -> 1
+		 *  /    \-> 3
+		 * 0
+		 *  \    /-> 5
+		 *   -> 2
+		 *       \-> 6
+		 */
+		DAG tree = new DAG();
+		tree.addEdge(0, 1);
+		tree.addEdge(0, 2);
+		tree.addEdge(1, 3);
+		tree.addEdge(1, 4);
+		tree.addEdge(2, 5);
+		tree.addEdge(2, 6);
         
-        assertEquals("Should be 1", 1, tree.findLCA(1, 1));
-        assertEquals("Should be 4", 4, tree.findLCA(4, 4));
-        assertEquals("Should be 6", 6, tree.findLCA(6, 6));
+		assertEquals("Should be 0", "0", getString(tree.findLCA(0, 0)));
+        assertEquals("Should be 1", "1", getString(tree.findLCA(1, 1)));
+        assertEquals("Should be 2", "2", getString(tree.findLCA(2, 2)));
+        assertEquals("Should be 3", "3", getString(tree.findLCA(3, 3)));
+        assertEquals("Should be 4", "4", getString(tree.findLCA(4, 4)));
 	}
 	
 	@Test
 	public void testLCAAsInputNode() {
-		BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.root.left.left = new Node(4);
-        tree.root.left.right = new Node(5);
-        tree.root.right.left = new Node(6);
-        tree.root.right.right = new Node(7);
+		/*
+		 * Graph:
+		 *        -> 4
+		 *       /
+		 *   -> 1
+		 *  /    \-> 3
+		 * 0
+		 *  \    /-> 5
+		 *   -> 2
+		 *       \-> 6
+		 */
+		DAG tree = new DAG();
+		tree.addEdge(0, 1);
+		tree.addEdge(0, 2);
+		tree.addEdge(1, 3);
+		tree.addEdge(1, 4);
+		tree.addEdge(2, 5);
+		tree.addEdge(2, 6);
         
-        assertEquals("Should be 1", 1, tree.findLCA(1, 4));
-        assertEquals("Should be 2", 2, tree.findLCA(2, 5));
+        assertEquals("Should be 1", "1", getString(tree.findLCA(1, 4)));
+        assertEquals("Should be 2", "2", getString(tree.findLCA(2, 5)));
 	}
 	
 	@Test
 	public void testNonExistantNode(){	
-		BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.root.left.left = new Node(4);
-        tree.root.left.right = new Node(5);
-        tree.root.right.left = new Node(6);
-        tree.root.right.right = new Node(7);
+		/*
+		 * Graph:
+		 *        -> 4
+		 *       /
+		 *   -> 1
+		 *  /    \-> 3
+		 * 0
+		 *  \    /-> 5
+		 *   -> 2
+		 *       \-> 6
+		 */
+		DAG tree = new DAG();
+		tree.addEdge(0, 1);
+		tree.addEdge(0, 2);
+		tree.addEdge(1, 3);
+		tree.addEdge(1, 4);
+		tree.addEdge(2, 5);
+		tree.addEdge(2, 6);
         
-		assertEquals("Should be -1 if 1 node does not exist",-1 ,tree.findLCA(3, 100));
-		assertEquals("Should be -1 as it is the same node",-1 ,tree.findLCA(8, 8));
-		assertEquals("Should be -2 if neither node exists",-1,tree.findLCA(40, 20));
+		assertEquals("Should be empty if 1 node does not exist","" , getString(tree.findLCA(3, 100)));
+		assertEquals("Should be empty as it is the same node","" , getString(tree.findLCA(8, 8)));
+		assertEquals("Should be empty if neither node exists","" , getString(tree.findLCA(40, 20)));
 	}
-	
-	// -----------------------------------------------------------------------------------
 
 	@Test
 	void testCycleCyclicGraph() {
@@ -98,7 +154,7 @@ class DirectedAcyclicGraphTest {
  	 	 *    /           |
 		 * 1   <-----------
 		 */
-		Graph graph = new Graph();
+		DAG graph = new DAG();
 		graph.addEdge(0, 1);
 		graph.addEdge(0, 2);
 		graph.addEdge(1, 2);
@@ -120,7 +176,7 @@ class DirectedAcyclicGraphTest {
 		 *  \-> 3
 		 * 
 		 */
-		Graph graph = new Graph();
+		DAG graph = new DAG();
 		graph.addEdge(5, 4);
 		graph.addEdge(5, 3);
 		graph.addEdge(4, 2);
@@ -140,7 +196,7 @@ class DirectedAcyclicGraphTest {
  	 	 *    /
 		 * 1          5
 		 */
-		Graph graph = new Graph();
+		DAG graph = new DAG();
 		graph.addEdge(0,  1);
 		graph.addEdge(0, 2);
 		graph.addEdge(1, 2);
@@ -159,7 +215,7 @@ class DirectedAcyclicGraphTest {
  	 	 *    /
 		 * 1          5
 		 */
-		Graph graph = new Graph();
+		DAG graph = new DAG();
 		graph.addEdge(0,  1);
 		graph.addEdge(0, 2);
 		graph.addEdge(1, 2);
@@ -178,6 +234,17 @@ class DirectedAcyclicGraphTest {
 		
 		node = graph.getNode(3);
 		assertEquals("Amount of out nodes should be 1", 1, node.getOutNodeAmount());
+	}
+	
+	private String getString(int[] array) {
+		String result = "";
+		for(int i = 0; i < array.length; i++) {
+			result += array[i];
+			result += ", ";
+		}
+		if(result != "")
+			result = result.substring(0, result.length() - 2);
+		return result;
 	}
 
 }
